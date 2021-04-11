@@ -10,11 +10,11 @@ using Xunit.Extensions;
 
 namespace WebAPI.IntegrationTests
 {
-    public class CreateUserTests : IClassFixture<WebApplicationFactory<Startup>>
+    public class CreateUserTests : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         private readonly HttpClient _client;
 
-        public CreateUserTests(WebApplicationFactory<Startup> factory)
+        public CreateUserTests(CustomWebApplicationFactory<Startup> factory)
         {
             _client = factory.CreateClient();
         }
