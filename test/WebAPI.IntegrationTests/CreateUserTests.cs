@@ -43,7 +43,6 @@ namespace WebAPI.IntegrationTests
             Assert.Equal($"http://localhost/v1/Users/{id}", httpResponse.Headers.Location.ToString());
         }
 
-
         public static IEnumerable<object[]> InvalidUserBody
         {
             get

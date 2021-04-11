@@ -1,9 +1,9 @@
-﻿using FluentValidation;
-using WebAPI.Dto;
+﻿using Domain.Dto;
+using FluentValidation;
 
 namespace WebAPI.Validation
 {
-    public class UserDtoValidation : AbstractValidator<CreateUserDto>
+    public class UserDtoValidation : AbstractValidator<UserDto>
     {
         public UserDtoValidation()
         {
