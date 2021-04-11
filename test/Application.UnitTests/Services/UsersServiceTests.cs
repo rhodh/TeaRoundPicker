@@ -2,6 +2,7 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
+using AutoMapper;
 using Moq;
 using Persistence.UserRepo;
 using Xunit;
@@ -22,7 +23,7 @@ namespace WebAPI.UnitTests.Controllers
         [Fact]
         public void SutConstructed()
         {
-            var sut = new UserService(Mock.Of<IUserWriter>(), Mock.Of<IUserReader>());
+            var sut = new UserService(Mock.Of<IUserWriter>(), Mock.Of<IUserReader>(), Mock.Of<IMapper>());
             Assert.NotNull(sut);
             Assert.IsAssignableFrom<IUserService>(sut);
         }

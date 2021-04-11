@@ -10,5 +10,6 @@ namespace Application.Services
         Task<User> GetUser(Guid userId);
 
         Task<User> CreateUser(UserDto user);
+        Task<DrinkOrder> AddDrinkOrder(Guid id, DrinkOrderDto drinkOrderDto);
     }
 }

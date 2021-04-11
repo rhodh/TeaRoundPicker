@@ -18,6 +18,15 @@ namespace Persistence.UserRepo
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
+        public async Task<DrinkOrder> CreateDrinkOrder(User user, DrinkOrder newDrinkOrder)
+        {
+            var dbModel = _mapper.Map<DrinkOrderDbModel>(newDrinkOrder);
+            dbModel.User = await GetUserDbModel(user.Id);
+            var savedUser = await _context.DrinkOrders.AddAsync(dbModel);
+            await _context.SaveChangesAsync();
+            return _mapper.Map<DrinkOrder>(savedUser.Entity);
+        }
+
         public async Task<User> CreateUser(User user)
         {
             var dbModel = _mapper.Map<UserDbModel>(user);
@@ -28,9 +37,13 @@ namespace Persistence.UserRepo
 
         public async Task<User> GetUser(Guid userId)
         {
-            var user
-                = await _context.Users.SingleOrDefaultAsync(x => x.Id == userId);
+            UserDbModel user = await GetUserDbModel(userId);
             return _mapper.Map<User>(user);
+        }
+
+        private async Task<UserDbModel> GetUserDbModel(Guid userId)
+        {
+            return await _context.Users.SingleOrDefaultAsync(x => x.Id == userId);
         }
     }
 }

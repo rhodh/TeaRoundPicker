@@ -4,7 +4,7 @@ using Persistence.DBModels;
 
 namespace Persistence.Configuration
 {
-    public class UsersConfiguration : IEntityTypeConfiguration<UserDbModel>
+    internal class UsersConfiguration : IEntityTypeConfiguration<UserDbModel>
     {
         public void Configure(EntityTypeBuilder<UserDbModel> builder)
         {

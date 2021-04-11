@@ -8,7 +8,8 @@ namespace Persistence.Mappers
     {
         public UserProfile()
         {
-            CreateMap<User, UserDbModel>();
+            CreateMap<User, UserDbModel>()
+                .ForMember(x => x.DrinkOrders, opt => opt.Ignore());
 
             CreateMap<UserDbModel, User>()
                 .ConvertUsing(x => new User(x.Id, x.FirstName, x.LastName));

@@ -10,6 +10,7 @@ namespace Persistence
         }
 
         public DbSet<UserDbModel> Users { get; set; }
+        public DbSet<DrinkOrderDbModel> DrinkOrders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
