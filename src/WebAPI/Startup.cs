@@ -1,3 +1,4 @@
+using Application.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Persistence.UserRepo;
 
 namespace WebAPI
 {
@@ -33,6 +35,9 @@ namespace WebAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TeaRoundPickerAPI", Version = "v1" });
             });
+
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserWriter, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

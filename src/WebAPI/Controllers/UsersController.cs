@@ -1,10 +1,12 @@
-﻿using Domain.Dto;
+﻿using Application.Services;
+using Domain.Dto;
 using Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Mime;
+using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
 {
@@ -15,10 +17,12 @@ namespace WebAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly ILogger<UsersController> _logger;
+        private readonly IUserService _userService;
 
-        public UsersController(ILogger<UsersController> logger)
+        public UsersController(ILogger<UsersController> logger, IUserService userService)
         {
-            _logger = logger;
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [HttpPost]
@@ -26,9 +30,9 @@ namespace WebAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(User), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-        public IActionResult CreateUser([FromBody] UserDto userDto, ApiVersion version)
+        public async Task<IActionResult> CreateUser([FromBody] UserDto userDto, ApiVersion version)
         {
-            User user = new(Guid.NewGuid(), userDto.FirstName, userDto.LastName);
+            User user = await _userService.CreateUser(userDto);
             return CreatedAtAction(nameof(GetUserById), new { id = user.Id, version = version.ToString() }, user);
         }
 
@@ -36,9 +40,10 @@ namespace WebAPI.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-        public ActionResult<User> GetUserById([FromRoute] Guid userId)
+        public async Task<ActionResult<User>> GetUserById([FromRoute] Guid userId)
         {
-            return Ok(new User(userId, "Jane", "Doe"));
+            User user = await _userService.GetUser(userId);
+            return Ok(user);
         }
     }
 }

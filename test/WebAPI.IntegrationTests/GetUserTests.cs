@@ -25,7 +25,7 @@ namespace WebAPI.IntegrationTests
                 return new[]
                 {
                     new object[] { new { firstName = "Jane", lastName = "Doe", } },
-                    //new object[] { new { firstName = "Bob", lastName = "Smith"} }
+                    new object[] { new { firstName = "Bob", lastName = "Smith"} }
                 };
             }
         }
