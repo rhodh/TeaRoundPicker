@@ -1,4 +1,5 @@
-﻿using Domain.Dto;
+﻿using Application.HttpExceptions;
+using Domain.Dto;
 using Domain.Models;
 using Persistence.UserRepo;
 using System;
@@ -25,8 +26,7 @@ namespace Application.Services
 
         public async Task<User> GetUser(Guid userId)
         {
-            User user = await _userReader.GetUser(userId) ?? throw new Exception();
-            return user;
+            return await _userReader.GetUser(userId) ?? throw new UserNotFoundException(userId);
         }
 
     }

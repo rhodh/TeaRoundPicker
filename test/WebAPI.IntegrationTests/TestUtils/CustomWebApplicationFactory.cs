@@ -25,6 +25,7 @@ namespace WebAPI.IntegrationTests.TestUtils
 
                 services.Remove(descriptor);
 
+                //TODO future task run docker instance of postgres on the pipeline
                 services.AddDbContext<TeaRoundPickerContext>(options =>
                 {
                     options.UseSqlite($"Filename=MyDatabase.db");

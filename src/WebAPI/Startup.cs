@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using Persistence;
 using Persistence.Mappers;
 using Persistence.UserRepo;
+using WebAPI.Filters;
 
 namespace WebAPI
 {
@@ -25,9 +26,8 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services
-                .AddControllers()
+                .AddControllers(op => op.Filters.Add<HttpResponseExceptionsFilter>())
                 .AddFluentValidation(fv =>
                 {
                     fv.RegisterValidatorsFromAssemblyContaining<Startup>();

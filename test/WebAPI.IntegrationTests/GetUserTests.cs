@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Testing;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -46,6 +47,19 @@ namespace WebAPI.IntegrationTests
             Assert.Equal(userId, id);
             Assert.Equal(user.firstName, firstName);
             Assert.Equal(user.lastName, lastName);
+        }
+
+
+        [Fact]
+        public async Task SutReturnsNotFoundWhenUsrDoesNotExist()
+        {
+            var (responseBody, httpResponse) = await _client.SendGetUserRequest(Guid.NewGuid().ToString());
+
+            ProblemDetails details = responseBody.ToObject<ProblemDetails>();
+
+            Assert.Equal(HttpStatusCode.NotFound, httpResponse.StatusCode);
+            Assert.Equal((int)HttpStatusCode.NotFound, details.Status);
+            Assert.Equal("UserNotFound", details.Type);
         }
     }
 }

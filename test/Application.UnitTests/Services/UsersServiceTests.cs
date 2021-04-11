@@ -2,6 +2,8 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
+using Moq;
+using Persistence.UserRepo;
 using Xunit;
 
 namespace WebAPI.UnitTests.Controllers
@@ -15,6 +17,14 @@ namespace WebAPI.UnitTests.Controllers
             var assertion = new GuardClauseAssertion(fixture);
 
             assertion.Verify(typeof(UserService).GetConstructors());
+        }
+
+        [Fact]
+        public void SutConstructed()
+        {
+            var sut = new UserService(Mock.Of<IUserWriter>(), Mock.Of<IUserReader>());
+            Assert.NotNull(sut);
+            Assert.IsAssignableFrom<IUserService>(sut);
         }
     }
 }
