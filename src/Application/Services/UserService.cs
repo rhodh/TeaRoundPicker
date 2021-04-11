@@ -9,10 +9,12 @@ namespace Application.Services
     public class UserService : IUserService
     {
         private readonly IUserWriter _userWriter;
+        private readonly IUserReader _userReader;
 
-        public UserService(IUserWriter userWriter)
+        public UserService(IUserWriter userWriter, IUserReader userReader)
         {
             _userWriter = userWriter ?? throw new ArgumentNullException(nameof(userWriter));
+            _userReader = userReader ?? throw new ArgumentNullException(nameof(userReader));
         }
 
         public async Task<User> CreateUser(UserDto user)
@@ -21,9 +23,10 @@ namespace Application.Services
             return await _userWriter.CreateUser(newUser);
         }
 
-        public Task<User> GetUser(Guid userId)
+        public async Task<User> GetUser(Guid userId)
         {
-            return Task.FromResult(new User(userId, "bob", "jones")); ;
+            User user = await _userReader.GetUser(userId) ?? throw new Exception();
+            return user;
         }
 
     }

@@ -43,7 +43,7 @@ namespace WebAPI.IntegrationTests
             var lastName = responseBody.Value<string>("lastName");
 
             Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
-            Assert.NotEqual(userId, id);
+            Assert.Equal(userId, id);
             Assert.Equal(user.firstName, firstName);
             Assert.Equal(user.lastName, lastName);
         }

@@ -40,9 +40,9 @@ namespace WebAPI.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<User>> GetUserById([FromRoute] Guid userId)
+        public async Task<ActionResult<User>> GetUserById([FromRoute] Guid id)
         {
-            User user = await _userService.GetUser(userId);
+            User user = await _userService.GetUser(id);
             return Ok(user);
         }
     }
