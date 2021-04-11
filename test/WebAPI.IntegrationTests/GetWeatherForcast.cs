@@ -20,7 +20,6 @@ namespace WebAPI.IntegrationTests
         public async Task GetForcastTestReturns200()
         {
             HttpResponseMessage result = await _client.GetAsync("/WeatherForecast");
-
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         }
     }
