@@ -27,5 +27,23 @@ namespace WebAPI.IntegrationTests.TestUtils
                 throw;
             }
         }
+
+        public static async Task<(JObject responseBody, HttpResponseMessage httpResponse)> SendGetUserRequest(
+           this HttpClient client, string id)
+        {
+            HttpResponseMessage response = await client.GetAsync($"v1/users/{id}");
+            var json = await response.Content.ReadAsStringAsync();
+
+            try
+            {
+                JObject responseBody = !string.IsNullOrEmpty(json) ? JObject.Parse(json) : null;
+                return (responseBody, response);
+            }
+            catch (Exception)
+            {
+                Assert.True(false, json);
+                throw;
+            }
+        }
     }
 }

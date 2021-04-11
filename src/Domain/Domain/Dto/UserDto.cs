@@ -1,6 +1,6 @@
-﻿namespace WebAPI.Dto
+﻿namespace Domain.Dto
 {
-    public class CreateUserDto
+    public class UserDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

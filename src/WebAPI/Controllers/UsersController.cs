@@ -1,10 +1,10 @@
-﻿using Domain.Models;
+﻿using Domain.Dto;
+using Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Mime;
-using WebAPI.Dto;
 
 namespace WebAPI.Controllers
 {
@@ -26,9 +26,9 @@ namespace WebAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(User), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-        public IActionResult CreateUser([FromBody] CreateUserDto userDto, ApiVersion version)
+        public IActionResult CreateUser([FromBody] UserDto userDto, ApiVersion version)
         {
-            User user = new() { Id = Guid.NewGuid(), FirstName = userDto.FirstName, LastName = userDto.LastName };
+            User user = new(Guid.NewGuid(), userDto.FirstName, userDto.LastName);
             return CreatedAtAction(nameof(GetUserById), new { id = user.Id, version = version.ToString() }, user);
         }
 
@@ -38,7 +38,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public ActionResult<User> GetUserById([FromRoute] Guid userId)
         {
-            return Ok(new User { Id = userId });
+            return Ok(new User(userId, "Jane", "Doe"));
         }
     }
 }

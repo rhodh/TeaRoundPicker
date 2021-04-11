@@ -4,8 +4,15 @@ namespace Domain.Models
 {
     public class User
     {
-        public Guid Id { get; set; }
-        public string LastName { get; set; }
-        public string FirstName { get; set; }
+        public User(Guid id, string firstName, string lastName)
+        {
+            Id = id;
+            FirstName = firstName;
+            LastName = lastName;
+        }
+
+        public Guid Id { get; }
+        public string LastName { get; }
+        public string FirstName { get; }
     }
 }
