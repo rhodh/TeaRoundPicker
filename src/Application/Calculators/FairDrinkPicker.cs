@@ -8,7 +8,12 @@ namespace Application.Calculators
     {
         public User CalculateDrinkUser(IEnumerable<User> users)
         {
-            return users.FirstOrDefault();
+            return users.Aggregate((lhs, rhs) => GetUserOrderComplicationFactor(lhs) >= GetUserOrderComplicationFactor(rhs) ? lhs : rhs );
+        }
+
+        private static int GetUserOrderComplicationFactor(User user)
+        {
+            return user.DrinkOrders.FirstOrDefault()?.AdditionalSpecification?.Count ?? 0;
         }
     }
 }
