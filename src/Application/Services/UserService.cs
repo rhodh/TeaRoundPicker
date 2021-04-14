@@ -4,6 +4,7 @@ using Domain.Dto;
 using Domain.Models;
 using Persistence.UserRepo;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Application.Services
@@ -36,6 +37,5 @@ namespace Application.Services
         {
             return await _userWriter.CreateDrinkOrder(await GetUser(id), _mapper.Map<DrinkOrder>(drinkOrderDto));
         }
-
     }
 }

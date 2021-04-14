@@ -19,7 +19,7 @@ namespace WebAPI.IntegrationTests.TestUtils
         {
             builder.ConfigureServices(services =>
             {
-                var descriptor = services.SingleOrDefault(
+                /*var descriptor = services.SingleOrDefault(
                     d => d.ServiceType ==
                         typeof(DbContextOptions<TeaRoundPickerContext>));
 
@@ -29,7 +29,7 @@ namespace WebAPI.IntegrationTests.TestUtils
                 services.AddDbContext<TeaRoundPickerContext>(options =>
                 {
                     options.UseLazyLoadingProxies().UseSqlite($"Filename=MyDatabase.db");
-                });
+                });*/
 
                 var sp = services.BuildServiceProvider();
 

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Domain.Models;
 using Persistence.DBModels;
+using System;
+using System.Collections.Generic;
 
 namespace Persistence.Mappers
 {
@@ -8,11 +10,14 @@ namespace Persistence.Mappers
     {
         public UserProfile()
         {
-            CreateMap<User, UserDbModel>()
-                .ForMember(x => x.DrinkOrders, opt => opt.Ignore());
+            CreateMap<User, UserDbModel>();
 
             CreateMap<UserDbModel, User>()
-                .ConvertUsing(x => new User(x.Id, x.FirstName, x.LastName));
+                .ConstructUsing((x, context) =>  
+                    new User(x.Id, 
+                        x.FirstName, 
+                        x.LastName, 
+                        context.Mapper.Map<IEnumerable<DrinkOrder>>(x.DrinkOrders)));
         }
     }
 }

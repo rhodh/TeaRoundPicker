@@ -4,13 +4,14 @@ using AutoFixture.Idioms;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using Persistence.DrinkRunRepo;
 using Persistence.UserRepo;
 using System;
 using Xunit;
 
-namespace Persistence.UnitTests.UserRepo
+namespace Persistence.UnitTests.DrinkRunRepo
 {
-    public class UserRepositoryTests
+    public class DrinkRunRepositoryTests
     {
         [Fact]
         public void SutThrowsWhenConstructureArgumentsAreNull()
@@ -18,7 +19,7 @@ namespace Persistence.UnitTests.UserRepo
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
             var assertion = new GuardClauseAssertion(fixture);
 
-            assertion.Verify(typeof(UserRepository).GetConstructors());
+            assertion.Verify(typeof(DrinkRunRepository).GetConstructors());
         }
 
         [Fact]
@@ -29,10 +30,9 @@ namespace Persistence.UnitTests.UserRepo
 
             using var context = new TeaRoundPickerContext(contextOption);
 
-            var sut = new UserRepository(context, Mock.Of<IMapper>());
+            var sut = new DrinkRunRepository(context, Mock.Of<IMapper>());
             Assert.NotNull(sut);
-            Assert.IsAssignableFrom<IUserReader>(sut);
-            Assert.IsAssignableFrom<IUserWriter>(sut);
+            Assert.IsAssignableFrom<IDrinkRunWriter>(sut);
         }
     }
 }

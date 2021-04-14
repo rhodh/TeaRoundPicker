@@ -1,11 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Newtonsoft.Json;
 using Persistence.DBModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Persistence.Configuration
 {
