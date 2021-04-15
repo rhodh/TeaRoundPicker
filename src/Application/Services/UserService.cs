@@ -1,8 +1,10 @@
 ﻿using Application.HttpExceptions;
+using AutoMapper;
 using Domain.Dto;
 using Domain.Models;
 using Persistence.UserRepo;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Application.Services
@@ -11,16 +13,18 @@ namespace Application.Services
     {
         private readonly IUserWriter _userWriter;
         private readonly IUserReader _userReader;
+        private readonly IMapper _mapper;
 
-        public UserService(IUserWriter userWriter, IUserReader userReader)
+        public UserService(IUserWriter userWriter, IUserReader userReader, IMapper mapper)
         {
             _userWriter = userWriter ?? throw new ArgumentNullException(nameof(userWriter));
             _userReader = userReader ?? throw new ArgumentNullException(nameof(userReader));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<User> CreateUser(UserDto user)
         {
-            User newUser = new(Guid.NewGuid(), user.FirstName, user.LastName);
+            User newUser = _mapper.Map<User>(user);
             return await _userWriter.CreateUser(newUser);
         }
 
@@ -29,5 +33,9 @@ namespace Application.Services
             return await _userReader.GetUser(userId) ?? throw new UserNotFoundException(userId);
         }
 
+        public async Task<DrinkOrder> AddDrinkOrder(Guid id, DrinkOrderDto drinkOrderDto)
+        {
+            return await _userWriter.CreateDrinkOrder(await GetUser(id), _mapper.Map<DrinkOrder>(drinkOrderDto));
+        }
     }
 }

@@ -6,4 +6,8 @@ dotnet tool install --global dotnet-ef
 
 dotnet ef migrations add InitialCreate --project src/Persistence --startup-project src/WebAPI
 
+dotnet ef migrations add AddDrinkOrder --project src/Persistence --startup-project src/WebAPI
+
 docker-compose etc
+
+cd c:\agent -> .\run.cmd

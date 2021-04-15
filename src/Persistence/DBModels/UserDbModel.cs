@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Persistence.DBModels
 {
@@ -7,5 +8,7 @@ namespace Persistence.DBModels
         public Guid Id { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
+
+        virtual public IEnumerable<DrinkOrderDbModel> DrinkOrders { get; set; }
     }
 }

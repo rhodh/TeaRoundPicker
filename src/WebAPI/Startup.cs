@@ -1,4 +1,6 @@
+using Application.Calculators;
 using Application.Services;
+using Domain.Mappers;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Persistence;
+using Persistence.DrinkRunRepo;
 using Persistence.Mappers;
 using Persistence.UserRepo;
 using WebAPI.Filters;
@@ -42,9 +45,12 @@ namespace WebAPI
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IUserWriter, UserRepository>();
             services.AddTransient<IUserReader, UserRepository>();
-            services.AddAutoMapper(typeof(UserProfile));
+            services.AddTransient<IDrinkRunService, DrinkRunService>();
+            services.AddTransient<IDrinkPicker, FairDrinkPicker>();
+            services.AddTransient<IDrinkRunWriter, DrinkRunRepository>();
+            services.AddAutoMapper(typeof(UserProfile), typeof(UserDomainProfile));
             services.AddDbContext<TeaRoundPickerContext>( 
-                options => options.UseNpgsql(Configuration.GetConnectionString("TeaRoundPickerDb")));
+                options => options.UseLazyLoadingProxies().UseNpgsql(Configuration.GetConnectionString("TeaRoundPickerDb")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

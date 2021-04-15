@@ -6,5 +6,6 @@ namespace Persistence.UserRepo
     public interface IUserWriter
     {
         Task<User> CreateUser(User user);
+        Task<DrinkOrder> CreateDrinkOrder(User user, DrinkOrder newDrinkOrder);
     }
 }

@@ -45,5 +45,25 @@ namespace WebAPI.Controllers
             User user = await _userService.GetUser(id);
             return Ok(user);
         }
+
+
+        [HttpPost("{id}/drinkOrder")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<DrinkOrder>> AddDrinkOrderToUser([FromRoute] Guid id, [FromBody] DrinkOrderDto drinkOrderDto, ApiVersion version)
+        {
+            DrinkOrder drinkOrder = await _userService.AddDrinkOrder(id, drinkOrderDto);
+            return CreatedAtAction(nameof(GetDrinkOrderById), new { id = drinkOrder.Id, userId = id, version = version.ToString() }, drinkOrder);
+        }
+
+        [HttpGet("{userId}/DrinkOrder/{id}")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public Task<ActionResult<User>> GetDrinkOrderById([FromRoute] Guid userId, [FromRoute] Guid id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

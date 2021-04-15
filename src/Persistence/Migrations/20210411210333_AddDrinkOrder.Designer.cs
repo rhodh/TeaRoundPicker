@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Persistence;
@@ -9,9 +10,10 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(TeaRoundPickerContext))]
-    partial class TeaRoundPickerContextModelSnapshot : ModelSnapshot
+    [Migration("20210411210333_AddDrinkOrder")]
+    partial class AddDrinkOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,19 +49,6 @@ namespace Persistence.Migrations
                     b.ToTable("DrinkOrder");
                 });
 
-            modelBuilder.Entity("Persistence.DBModels.DrinkRunDbModel", b =>
-                {
-                    b.Property<Guid>("DrinkMakerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("DrinkMakerId");
-
-                    b.ToTable("DrinkRun");
-                });
-
             modelBuilder.Entity("Persistence.DBModels.UserDbModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -88,17 +77,6 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Persistence.DBModels.DrinkRunDbModel", b =>
-                {
-                    b.HasOne("Persistence.DBModels.UserDbModel", "DrinkMaker")
-                        .WithOne()
-                        .HasForeignKey("Persistence.DBModels.DrinkRunDbModel", "DrinkMakerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("DrinkMaker");
                 });
 
             modelBuilder.Entity("Persistence.DBModels.UserDbModel", b =>

@@ -28,7 +28,7 @@ namespace WebAPI.IntegrationTests.TestUtils
                 //TODO future task run docker instance of postgres on the pipeline
                 services.AddDbContext<TeaRoundPickerContext>(options =>
                 {
-                    options.UseSqlite($"Filename=MyDatabase.db");
+                    options.UseLazyLoadingProxies().UseSqlite($"Filename=MyDatabase.db");
                 });
 
                 var sp = services.BuildServiceProvider();
