@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Testing;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -18,6 +19,53 @@ namespace WebAPI.IntegrationTests
             _client = factory.CreateClient();
         }
 
+        [Fact]
+        public async Task SutReturnBadRequestIfAUserDoesNotHaveAnyOrders()
+        {
+            var userId = new Guid((await _client.SendCreateUserRequest(new
+            {
+                firstName = "Bob",
+                lastName = "Smith",
+            })).responseBody.Value<string>("id"));
+
+            var otherUserId = await CreateUser(new
+            {
+                firstName = "John",
+                lastName = "William",
+            },
+            new
+            {
+                type = "InstantCoffee",
+                name = "Morning Joe",
+                additionalSpecification = new Dictionary<string, string>
+                {
+                    { "brand", "nescafe" },
+                    { "amount", "2 tea spoons"},
+                    { "sugar", "1 table spoon" },
+                    { "milk", "" }
+                }
+            });
+
+            var (responseBody, httpResponse) = await _client.SendCreateDrinkRunRequest(new
+            {
+                particpants = new object[]
+                {
+                    new
+                    {
+                        userId
+                    },
+                    new
+                    {
+                        userId = otherUserId
+                    }
+                }
+            });
+
+            ProblemDetails details = responseBody.ToObject<ProblemDetails>();
+
+            Assert.Equal(HttpStatusCode.BadRequest, httpResponse.StatusCode);
+            Assert.Equal("OrderNotDefined", details.Type);
+        }
 
         [Fact]
         public async Task SutReturnCreatedUserWithId()
@@ -83,6 +131,8 @@ namespace WebAPI.IntegrationTests
             Assert.Equal(expectedDrinkMakerName.lastName, drinkMaker.Value<string>("lastName"));
             Assert.Equal($"http://localhost/v1/DrinkRun/{id}", httpResponse.Headers.Location.ToString());
         }
+
+        
 
         private async Task<Guid> CreateUser(object user, object brew)
         {
