@@ -47,6 +47,17 @@ namespace WebAPI.IntegrationTests
             Assert.Equal($"http://localhost/v1/Users/{userId}/DrinkOrder/{id}", httpResponse.Headers.Location.ToString());
         }
 
+                [Fact]
+        public async Task SutReturnsNotFoundWhenUserDoesNotExist()
+        {
+            var (responseBody, httpResponse) = await _client.SendGetUserRequest(Guid.NewGuid().ToString());
+
+            ProblemDetails details = responseBody.ToObject<ProblemDetails>();
+
+            Assert.Equal(HttpStatusCode.NotFound, httpResponse.StatusCode);
+            Assert.Equal((int)HttpStatusCode.NotFound, details.Status);
+            Assert.Equal("UserNotFound", details.Type);
+        }
 
         [Fact]
         public async Task SutSecondOrderIsRejectForAlphaRelease()
