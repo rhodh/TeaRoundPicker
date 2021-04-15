@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -68,8 +69,36 @@ namespace WebAPI.IntegrationTests
             Assert.Equal("OrderNotDefined", details.Type);
         }
 
+     
         [Fact]
-        public async Task SutReturnCreatedUserWithId()
+        public async Task SutReturnCreated()
+        {
+            (Guid, Guid) users = await GetTwoUsers();
+
+            var (responseBody, httpResponse) = await _client.SendCreateDrinkRunRequest(new
+            {
+                particpants = new object[]
+                {
+                    new
+                    {
+                        usersId = users.Item1
+                    },
+                    new
+                    {
+                        userId = users.Item2
+                    }
+                }
+            });
+
+            var id = new Guid(responseBody.Value<string>("id"));
+
+            Assert.Equal(HttpStatusCode.Created, httpResponse.StatusCode);
+            Assert.NotEqual(Guid.Empty, id);
+            Assert.Equal($"http://localhost/v1/DrinkRun/{id}", httpResponse.Headers.Location.ToString());
+        }
+
+        [Fact]
+        public async Task SutReturnExpectedDrinkMaker()
         {
             var userId = await CreateUser(new
             {
@@ -106,8 +135,7 @@ namespace WebAPI.IntegrationTests
                     { "milk", "" }
                 }
             });
-
-            var (responseBody, httpResponse) = await _client.SendCreateDrinkRunRequest(new 
+            var (responseBody, _) = await _client.SendCreateDrinkRunRequest(new 
             {
                 particpants = new object[]
                 {
@@ -122,29 +150,60 @@ namespace WebAPI.IntegrationTests
                 } 
             });
 
-            var id = new Guid(responseBody.Value<string>("id"));
             var drinkMaker = responseBody.SelectToken("drinkMaker");
-            var orders = responseBody.SelectToken("orders").ToObject<IEnumerable<DrinkOrdersV1>>();
 
-            Assert.Equal(HttpStatusCode.Created, httpResponse.StatusCode);
-            Assert.NotEqual(Guid.Empty, id);
             Assert.Equal(expectedDrinkMakerId.ToString(), drinkMaker.Value<string>("id"));
             Assert.Equal(expectedDrinkMakerName.firstName, drinkMaker.Value<string>("firstName"));
             Assert.Equal(expectedDrinkMakerName.lastName, drinkMaker.Value<string>("lastName"));
-            
-            Assert.NotNull(orders);
-            Assert.Contains(orders, o => o.UserId == userId);
-            Assert.Contains(orders, o => o.UserId == expectedDrinkMakerId);
-
-            Assert.Equal($"http://localhost/v1/DrinkRun/{id}", httpResponse.Headers.Location.ToString());
         }
-       
+
         private async Task<Guid> CreateUser(object user, object brew)
         {
             var userId = new Guid((await _client.SendCreateUserRequest(user)).responseBody.Value<string>("id"));
             await _client.SendCreateDrinkOrderRequest(userId, brew);
             return userId;
         }
+
+        private async Task<(Guid, Guid)> GetTwoUsers()
+        {
+            var userId = await CreateUser(new
+            {
+                firstName = "Bob",
+                lastName = "Smith",
+            },
+            new
+            {
+                type = "Tea",
+                name = "Fave Brew",
+                additionalSpecification = new Dictionary<string, string>
+                {
+                    { "milk", "lots" },
+                    { "sugar", "2 tea spoons"},
+                    { "brewTime", "2 min" }
+                }
+            });
+
+            var otherUser = await CreateUser(new
+            {
+                firstName = "John",
+                lastName = "William",
+            },
+            new
+            {
+                type = "InstantCoffee",
+                name = "Morning Joe",
+                additionalSpecification = new Dictionary<string, string>
+                {
+                    { "brand", "nescafe" },
+                    { "amount", "2 tea spoons"},
+                    { "sugar", "1 table spoon" },
+                    { "milk", "" }
+                }
+            });
+
+            return (userId, otherUser);
+        }
+
 
     }
 }
