@@ -1,0 +1,11 @@
+@startuml
+start
+repeat
+  :Create User;
+  :Add Drink Order To User;
+repeat while (More user required?) is (yes)
+->no;
+:Create new Drink Run;
+:Selected User makes drink;
+stop
+@enduml

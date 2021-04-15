@@ -22,6 +22,35 @@ namespace WebAPI.IntegrationTests
         }
 
         [Fact]
+        public async Task SutBadRequestWhenBodyIsEmpty()
+        {
+            (Guid, Guid) users = await GetTwoUsers();
+
+            var (responseBody, httpResponse) = await _client.SendCreateDrinkRunRequest(new
+            {
+            });
+
+            Assert.Equal(HttpStatusCode.BadRequest, httpResponse.StatusCode);
+        }
+
+
+        [Fact]
+        public async Task SutBadRequestWhenParicipantssEmpty()
+        {
+            (Guid, Guid) users = await GetTwoUsers();
+
+            var (responseBody, httpResponse) = await _client.SendCreateDrinkRunRequest(new
+            {
+                participants = new object[]
+                {
+                 
+                }
+            });
+
+            Assert.Equal(HttpStatusCode.BadRequest, httpResponse.StatusCode);
+        }
+
+        [Fact]
         public async Task SutReturnBadRequestIfAUserDoesNotHaveAnyOrders()
         {
             var userId = new Guid((await _client.SendCreateUserRequest(new
@@ -50,7 +79,7 @@ namespace WebAPI.IntegrationTests
 
             var (responseBody, httpResponse) = await _client.SendCreateDrinkRunRequest(new
             {
-                particpants = new object[]
+                participants = new object[]
                 {
                     new
                     {
@@ -74,7 +103,7 @@ namespace WebAPI.IntegrationTests
         {
             var (responseBody, httpResponse) = await _client.SendCreateDrinkRunRequest(new
             {
-                particpants = new object[]
+                participants = new object[]
                 {
                     new
                     {
@@ -105,7 +134,7 @@ namespace WebAPI.IntegrationTests
 
             var (responseBody, httpResponse) = await _client.SendCreateDrinkRunRequest(new
             {
-                particpants = new object[]
+                participants = new object[]
                 {
                     new
                     {
@@ -131,7 +160,7 @@ namespace WebAPI.IntegrationTests
 
             var (responseBody, httpResponse) = await _client.SendCreateDrinkRunRequest(new
             {
-                particpants = new object[]
+                participants = new object[]
                 {
                     new
                     {
@@ -191,7 +220,7 @@ namespace WebAPI.IntegrationTests
             });
             var (responseBody, _) = await _client.SendCreateDrinkRunRequest(new 
             {
-                particpants = new object[]
+                participants = new object[]
                 {
                     new
                     {
@@ -218,7 +247,7 @@ namespace WebAPI.IntegrationTests
 
             var (responseBody, httpResponse) = await _client.SendCreateDrinkRunRequest(new
             {
-                particpants = new object[]
+                participants = new object[]
                 {
                     new
                     {

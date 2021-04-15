@@ -43,6 +43,54 @@ _This moves the context of the command line to the WebAPI src code and starts th
 
 If you navigate to https://localhost:5001/swagger you can access the swagger documentation related to the API
 
+## Use Application
+
+If you look at `doc/TeaPickerActivityDiagram.png` you can see the activity diagram for the TeaPickerProduct.
+
+But a general case is create as many users as you want:
+
+`POST /v1/Users`
+
+```json
+{
+    "lastName": "string",
+    "firstName": "string"
+}
+```
+
+Don't forget to add a Order to that user:
+
+`POST /v1/Users/{userId}/Order`
+
+```json
+{
+    "name": "string",
+    "type": "string",
+    "additionalSpecification": {
+        "additionalProp1": "string",
+        "additionalProp2": "string",
+        "additionalProp3": "string"
+    }
+}
+```
+_N.B You can add specification of how to make your drink with the additionalSpecification object_
+
+Once you've created all you're users now you can create your order. The DrinkPicker uses a patented algorithm to calculate the most fair person to pick to make the tea.
+
+`POST /v1/DrinkRun`
+```json
+{
+  "participants": [
+    {
+      "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    },
+    {
+      "userId": "6d549882-185b-4a9d-a88d-54a3f2e079a3"
+    }
+  ]
+}
+```     
+
 ## Add new migrations
 If you update or create any new DbModels we need to update the EF migration script. The migration script 
 will generate the sql needed to change the schema.

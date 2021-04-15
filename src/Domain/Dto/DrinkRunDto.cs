@@ -4,6 +4,6 @@ namespace Domain.Dto
 {
     public class DrinkRunDto
     {
-        public IEnumerable<ParticpantsDto> Particpants { get; set; }
+        public IEnumerable<ParticipantDto> Participants { get; set; }
     }
 }
