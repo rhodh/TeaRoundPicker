@@ -69,7 +69,61 @@ namespace WebAPI.IntegrationTests
             Assert.Equal("OrderNotDefined", details.Type);
         }
 
-     
+        [Fact]
+        public async Task SutReturnBadRequestBothUserDoesNotExist()
+        {
+            var (responseBody, httpResponse) = await _client.SendCreateDrinkRunRequest(new
+            {
+                particpants = new object[]
+                {
+                    new
+                    {
+                        userId = Guid.NewGuid()
+                    },
+                    new
+                    {
+                        userId = Guid.NewGuid()
+                    }
+                }
+            });
+
+            ProblemDetails details = responseBody.ToObject<ProblemDetails>();
+
+            Assert.Equal(HttpStatusCode.BadRequest, httpResponse.StatusCode);
+            Assert.Equal("UsersNotFound", details.Type);
+        }
+
+        [Fact]
+        public async Task SutReturnBadRequestOneUserDoesNotExist()
+        {
+            var userId = new Guid((await _client.SendCreateUserRequest(new
+            {
+                firstName = "Bob",
+                lastName = "Smith",
+            })).responseBody.Value<string>("id"));
+
+
+            var (responseBody, httpResponse) = await _client.SendCreateDrinkRunRequest(new
+            {
+                particpants = new object[]
+                {
+                    new
+                    {
+                        userId = Guid.NewGuid()
+                    },
+                    new
+                    {
+                        userId
+                    }
+                }
+            });
+
+            ProblemDetails details = responseBody.ToObject<ProblemDetails>();
+
+            Assert.Equal(HttpStatusCode.BadRequest, httpResponse.StatusCode);
+            Assert.Equal("UsersNotFound", details.Type);
+        }
+
         [Fact]
         public async Task SutReturnCreated()
         {
@@ -81,7 +135,7 @@ namespace WebAPI.IntegrationTests
                 {
                     new
                     {
-                        usersId = users.Item1
+                        userId = users.Item1
                     },
                     new
                     {
@@ -155,6 +209,35 @@ namespace WebAPI.IntegrationTests
             Assert.Equal(expectedDrinkMakerId.ToString(), drinkMaker.Value<string>("id"));
             Assert.Equal(expectedDrinkMakerName.firstName, drinkMaker.Value<string>("firstName"));
             Assert.Equal(expectedDrinkMakerName.lastName, drinkMaker.Value<string>("lastName"));
+        }
+
+        [Fact]
+        public async Task SutReturnUsersOrders()
+        {
+            (Guid, Guid) users = await GetTwoUsers();
+
+            var (responseBody, httpResponse) = await _client.SendCreateDrinkRunRequest(new
+            {
+                particpants = new object[]
+                {
+                    new
+                    {
+                        userId = users.Item1
+                    },
+                    new
+                    {
+                        userId = users.Item2
+                    }
+                }
+            });
+
+            var orders = responseBody.SelectToken("orders").ToObject<IEnumerable<DrinkOrdersV1>>();
+
+            Assert.NotNull(orders);
+            Assert.Contains(orders, o => o.UserId == users.Item1);
+            Assert.Equal(3, orders.First(o => o.UserId == users.Item1).AdditionalSpecification.Count);
+            Assert.Contains(orders, o => o.UserId == users.Item2);
+            Assert.Equal(4, orders.First(o => o.UserId == users.Item2).AdditionalSpecification.Count);
         }
 
         private async Task<Guid> CreateUser(object user, object brew)

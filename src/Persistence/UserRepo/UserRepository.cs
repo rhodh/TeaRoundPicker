@@ -20,10 +20,10 @@ namespace Persistence.UserRepo
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<DrinkOrder> CreateDrinkOrder(User user, DrinkOrder newDrinkOrder)
+        public async Task<DrinkOrder> CreateDrinkOrder(DrinkOrder newDrinkOrder)
         {
             var dbModel = _mapper.Map<DrinkOrderDbModel>(newDrinkOrder);
-            dbModel.User = await GetUserDbModel(user.Id);
+            dbModel.User = await GetUserDbModel(newDrinkOrder.UserId);
             var savedUser = await _context.DrinkOrders.AddAsync(dbModel);
             await _context.SaveChangesAsync();
             return _mapper.Map<DrinkOrder>(savedUser.Entity);

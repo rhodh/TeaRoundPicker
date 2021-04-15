@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Domain.Dto
 {
@@ -7,5 +8,6 @@ namespace Domain.Dto
         public string Name { get; set; }
         public string Type { get; set; }
         public IDictionary<string, string> AdditionalSpecification { get; set; }
+        public Guid UserId { get; set; }
     }
 }

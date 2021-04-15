@@ -9,10 +9,11 @@ namespace Persistence.Mappers
         public DrinkOrderProfile()
         {
             CreateMap<DrinkOrder, DrinkOrderDbModel>()
-                .ForMember(x => x.User, opt => opt.Ignore());
+                .ForMember(x => x.User, opt => opt.Ignore())
+                .ForMember(x => x.DrinkRuns, opt => opt.Ignore());
 
             CreateMap<DrinkOrderDbModel, DrinkOrder>()
-                .ConvertUsing(x => new DrinkOrder(x.Id, x.Name, x.Type, x.AdditionalSpecification));
+                .ConvertUsing(x => new DrinkOrder(x.Id, x.User.Id, x.Name, x.Type, x.AdditionalSpecification));
         }
     }
 }

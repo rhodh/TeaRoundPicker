@@ -18,6 +18,10 @@ namespace Persistence.Configuration
                 .HasForeignKey<DrinkRunDbModel>(dR => dR.DrinkMakerId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
+
+            builder
+                .HasMany(d => d.DrinkOrders)
+                .WithMany(o => o.DrinkRuns);
         }
     }
 }

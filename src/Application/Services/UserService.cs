@@ -43,7 +43,10 @@ namespace Application.Services
                 throw new OverOrderLimitException(user);
             }
 
-            return await _userWriter.CreateDrinkOrder(user, _mapper.Map<DrinkOrder>(drinkOrderDto));
+            //Attach user
+            drinkOrderDto.UserId = id;
+
+            return await _userWriter.CreateDrinkOrder(_mapper.Map<DrinkOrder>(drinkOrderDto));
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using Domain.Models;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Persistence.DBModels
 {
@@ -8,5 +8,6 @@ namespace Persistence.DBModels
         public Guid Id { get; set; }
         public Guid DrinkMakerId { get; set; }
         virtual public UserDbModel DrinkMaker { get; set; }
+        virtual public IEnumerable<DrinkOrderDbModel> DrinkOrders { get;set;}
     }
 }

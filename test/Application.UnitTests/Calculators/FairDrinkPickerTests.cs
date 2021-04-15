@@ -44,7 +44,7 @@ namespace Application.UnitTests.Calculators
 
         private static DrinkOrder CreateDrinkOrder(Dictionary<string, string> dictionary)
         {
-            return new DrinkOrder(Guid.NewGuid(), "", "", dictionary);
+            return new DrinkOrder(Guid.NewGuid(), Guid.NewGuid(), "", "", dictionary);
         }
 
         [Theory]

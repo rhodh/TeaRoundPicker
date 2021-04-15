@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using Persistence.DBModels;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Persistence.DrinkRunRepo
@@ -20,6 +22,8 @@ namespace Persistence.DrinkRunRepo
         public async Task<DrinkRun> CreateDrinkRun(DrinkRun drinkRun)
         {
             var dbModel = _mapper.Map<DrinkRunDbModel>(drinkRun);
+            var orders = drinkRun.Orders.Select(x => x.Id);
+            dbModel.DrinkOrders = await _context.DrinkOrders.Where(x => orders.Contains(x.Id)).ToListAsync();
             var savedEnitity = await _context.DrinkRuns.AddAsync(dbModel);
             await _context.SaveChangesAsync();
             return _mapper.Map<DrinkRun>(savedEnitity.Entity);
