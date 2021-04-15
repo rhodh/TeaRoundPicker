@@ -26,7 +26,7 @@ namespace Application.Services
 
         public async Task<DrinkRun> CreateDrinkRun(DrinkRunDto drinkRunDto)
         {
-            var users = await _userReader.GetUsers(drinkRunDto.Particpants.Select(x => x.UserId));
+            var users = await _userReader.GetUsers(drinkRunDto.Participants.Select(x => x.UserId));
 
             ValidateUsers(drinkRunDto, users);
 
@@ -37,10 +37,10 @@ namespace Application.Services
 
         private static void ValidateUsers(DrinkRunDto drinkRunDto, IEnumerable<User> users)
         {
-            if(users.Count() != drinkRunDto.Particpants.Count())
+            if(users.Count() != drinkRunDto.Participants.Count())
             {
                 throw new UsersNotFoundExceptions(drinkRunDto.
-                    Particpants.Where(x => !users.Any(u => u.Id == x.UserId)).Select(x => x.UserId));
+                    Participants.Where(x => !users.Any(u => u.Id == x.UserId)).Select(x => x.UserId));
             }
 
             var missingOrders = users.Where(x => !x.DrinkOrders.Any());

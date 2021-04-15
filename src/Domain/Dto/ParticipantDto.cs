@@ -2,7 +2,7 @@
 
 namespace Domain.Dto
 {
-    public class ParticpantsDto
+    public class ParticipantDto
     {
         public Guid UserId { get; set; }
     }
