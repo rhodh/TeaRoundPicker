@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -51,7 +50,7 @@ namespace WebAPI.IntegrationTests
 
 
         [Fact]
-        public async Task SutReturnsNotFoundWhenUsrDoesNotExist()
+        public async Task SutReturnsNotFoundWhenUserDoesNotExist()
         {
             var (responseBody, httpResponse) = await _client.SendGetUserRequest(Guid.NewGuid().ToString());
 

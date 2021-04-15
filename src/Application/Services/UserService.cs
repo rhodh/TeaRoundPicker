@@ -5,6 +5,7 @@ using Domain.Models;
 using Persistence.UserRepo;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Application.Services
@@ -35,7 +36,14 @@ namespace Application.Services
 
         public async Task<DrinkOrder> AddDrinkOrder(Guid id, DrinkOrderDto drinkOrderDto)
         {
-            return await _userWriter.CreateDrinkOrder(await GetUser(id), _mapper.Map<DrinkOrder>(drinkOrderDto));
+            User user = await GetUser(id);
+
+            if(user.DrinkOrders.Any())
+            {
+                throw new OverOrderLimitException(user);
+            }
+
+            return await _userWriter.CreateDrinkOrder(user, _mapper.Map<DrinkOrder>(drinkOrderDto));
         }
     }
 }
