@@ -28,14 +28,21 @@ namespace Application.Services
         {
             var users = await _userReader.GetUsers(drinkRunDto.Particpants.Select(x => x.UserId));
 
-            ValidateUsers(users);
+            ValidateUsers(drinkRunDto, users);
 
             User drinkMaker = _drinkPicker.CalculateDrinkUser(users);
-            return await _drinkRunWriter.CreateDrinkRun(new DrinkRun(Guid.NewGuid(), drinkMaker));
+            return await _drinkRunWriter.CreateDrinkRun(new DrinkRun(Guid.NewGuid(), 
+                drinkMaker, users.Select(x => x.DrinkOrders.First())));
         }
 
-        private static void ValidateUsers(IEnumerable<User> users)
+        private static void ValidateUsers(DrinkRunDto drinkRunDto, IEnumerable<User> users)
         {
+            if(users.Count() != drinkRunDto.Particpants.Count())
+            {
+                throw new UsersNotFoundExceptions(drinkRunDto.
+                    Particpants.Where(x => !users.Any(u => u.Id == x.UserId)).Select(x => x.UserId));
+            }
+
             var missingOrders = users.Where(x => !x.DrinkOrders.Any());
             if (missingOrders.Any())
             {

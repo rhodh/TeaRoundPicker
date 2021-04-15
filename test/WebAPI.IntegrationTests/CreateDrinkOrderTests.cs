@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -7,7 +6,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using WebAPI.IntegrationTests.TestUtils;
 using Xunit;
-using Xunit.Extensions;
 
 namespace WebAPI.IntegrationTests
 {
@@ -48,6 +46,7 @@ namespace WebAPI.IntegrationTests
             Assert.NotEqual(Guid.Empty, id);
             Assert.Equal($"http://localhost/v1/Users/{userId}/DrinkOrder/{id}", httpResponse.Headers.Location.ToString());
         }
+
 
         [Fact]
         public async Task SutSecondOrderIsRejectForAlphaRelease()

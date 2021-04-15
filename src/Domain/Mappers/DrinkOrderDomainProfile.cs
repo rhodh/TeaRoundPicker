@@ -10,7 +10,7 @@ namespace Domain.Mappers
         public DrinkOrderDomainProfile()
         {
             CreateMap<DrinkOrderDto, DrinkOrder>()
-                .ConvertUsing(x => new DrinkOrder(Guid.NewGuid(), x.Name, x.Type, x.AdditionalSpecification));
+                .ConvertUsing(x => new DrinkOrder(Guid.NewGuid(), x.UserId, x.Name, x.Type, x.AdditionalSpecification));
         }
     }
 }
